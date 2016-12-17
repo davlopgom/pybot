@@ -10,19 +10,20 @@ import sys
 import random
 
 psnids = [
-    'LVE - PSN ID list',
-    '----------------------------',
-    'DarkSieL - DarkSieL',
-    'Frank - FJRISH',
-    'Oscar - Heissentronik204',
-    'Ralph - Nessus7',
-    'Javi - mezORZ',
-    'BoLoLsD - BoLoLsD',
-    'Yeray - yeray201103',
-    'Xou -  xou86',
-    'Ino - EddisV',
-    'Karmelo - karmeloguillen',
-    'Sergio - Reynoldor']
+    'LVE - PSN ID List',
+    '',
+    '\U0001F47E BoLoLsD - BoLoLsD',
+    '\U0001F47E DarkSieL - DarkSieL',
+    '\U0001F47E Frank - FJRISH',
+    '\U0001F47E Javi - mezORZ',
+    '\U0001F47E Ino - EddisV',
+    '\U0001F47E Karmelo - karmeloguillen',
+    '\U0001F47E Oscar - Heissentronik204',
+    '\U0001F47E Ralph - Nessus7',
+    '\U0001F47E Rael  - raelga',
+    '\U0001F47E Sergio - Reynoldor',
+    '\U0001F47E Xou - xou86',
+    '\U0001F47E Yeray - yeray201103']
 
 def hear(words):
 
