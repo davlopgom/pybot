@@ -60,10 +60,18 @@ def hear(bot, update):
     remember(bot, update)
     if thoughts: speak(bot, update, thoughts)
 
-    m = update.message
+def event_response(bot, update):
+    """Function to handle text messages"""
+    if update.message.new_chat_member is not None:
+        logger.info('New member')
+        thoughts = brain.respond(update.message.text, 'salute')
 
-    if ( m.chat_id == -1001056495683 ) and ( m.from_user.id == 51267720 ):
-        bot.sendDocument(m.chat_id, document="http://thecatapi.com/api/images/get?format=src&type=gif&timestamp=" + str(random.random()) + ".gif")
+    if update.message.left_chat_member is not None:
+        logger.info('Member left')
+        thoughts = brain.respond(update.message.text, 'farewell')
+
+    remember(bot, update)
+    if thoughts is not None: speak(bot, update, thoughts)
 
 import requests
 
@@ -78,49 +86,24 @@ def speak(bot, update, thoughts):
         else:
             bot.sendMessage(update.message.chat_id, text=words)
 
-def groups_hardcoded(bot, update):
-
-    rmk = InlineKeyboardMarkup([
-                    [InlineKeyboardButton('Destiny', url='https://telegram.me/pkts_destiny')],
-                    [InlineKeyboardButton('Overwatch', url='https://telegram.me/pkts_overwatch')],
-                    [InlineKeyboardButton('Battlefield', url='https://telegram.me/pkts_battlefield')],
-                    [InlineKeyboardButton('Final Fantasy', url='https://telegram.me/joinchat/AzNL9D_0xS_0h6Q3H5m69Q')],
-                    [InlineKeyboardButton('Grand Theft Auto', url='https://telegram.me/joinchat/AzNL9ECAaKh4y3za3egFbw')],
-                    [InlineKeyboardButton('Space Exploration', url='https://telegram.me/joinchat/AzNL9EAy0gzR3etQ_Q4JSw')],
-                    [InlineKeyboardButton('Division', url='https://telegram.me/joinchat/ANSWpD4TPEtu5wGU6O7J3Q')],
-                    [InlineKeyboardButton('Souls', url='https://telegram.me/joinchat/AzNL9ACpL0yP02kER67Mhg')],
-                    [InlineKeyboardButton('Borlderlands', url='https://telegram.me/joinchat/AzNL9AD3n5pKH_6e1trOZA')],
-                    [InlineKeyboardButton('Hearthstone', url='https://telegram.me/joinchat/AzNL9D7UHCsWDtfgz1cw3g')],
-                    [InlineKeyboardButton('PC Master Race', url='https://telegram.me/joinchat/AzNL9EFBO0e81gXlECiRzA')],
-                    [InlineKeyboardButton('Pokémon', url='https://telegram.me/joinchat/AzNL9D-KxgBdpa9RlWF2kg')],
-                    [InlineKeyboardButton('Miscelánea', url='https://telegram.me/miscelanea')],
-                   ])
-
-    bot.sendMessage(update.message.chat_id, text="Listado de grupos, pulsa para unirte.", reply_markup=rmk)
-
-
 def show(bot, update, stuff, type):
     """Function to handle bot responses when he need more than words"""
     logger.info('I\'ve got something to show.')
     try:
         if type == 'file':
-            try:
-                thing = open(stuff, 'rb')
-            except:
-                logger.warn("I can't open the %s" % stuff)
+            thing = open(stuff, 'rb')
         elif type == 'url':
-            try:
-                if requests.get(stuff).status_code == 200:
-                    thing = stuff
-                else:
-                    logger.warn("%s is not available." % stuff)
-            except:
-                logger.warn("%s is not a URL." % stuff)
+            if requests.get(stuff).status_code == 200:
+                thing = stuff
+            else:
+                logger.warn("%s is not available." % stuff)
         else:
             thing = stuff
 
         if thing and stuff.lower().endswith(('.png', '.jpg', '.jpeg')):
             bot.sendPhoto(update.message.chat_id, photo=thing)
+        elif thing:
+            bot.sendDocument(update.message.chat_id, document=thing)
 
     except:
         logger.warn("I can't show the %s" % stuff)
@@ -134,10 +117,6 @@ def view(bot, update):
     remember(bot, update)
     if thoughts: speak(bot, update, thoughts)
 
-    m = update.message
-    if ( m.chat_id == -1001056495683 ) and ( m.from_user.id == 51267720 ):
-        bot.sendDocument(m.chat_id, document="http://thecatapi.com/api/images/get?format=src&type=gif&timestamp=" + str(random.random()) + ".gif")
-
 def remember(bot, update):
     m = update.message
     brain.remember(m.date, m.chat_id, m.from_user.id, m.text)
@@ -150,11 +129,10 @@ def main():
     # Message handlers
     dp.add_handler(MessageHandler([Filters.text], hear))
     dp.add_handler(MessageHandler([Filters.photo], view))
+    dp.add_handler(MessageHandler([Filters.status_update], event_response))
 
     # Command definitions
-    dp.add_handler(CommandHandler("battletags", hear))
-    dp.add_handler(CommandHandler("groups", groups_hardcoded))
-    dp.add_handler(CommandHandler("update_yourself", update_yourself))
+    dp.add_handler(CommandHandler("start", start))
 
     # log all errors
     dp.add_error_handler(error)
