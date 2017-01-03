@@ -23,7 +23,7 @@ psnids = [
     '\U0001F47E Ino - EddisV',
     '\U0001F47E Karmelo - karmeloguillen',
     '\U0001F47E Marcos - cyb_nai',
-    '\U0001F47E Marcos - VIPTHC',
+    '\U0001F47E Mateo - VIPTHC',
     '\U0001F47E Oscar - Heissentronik204',
     '\U0001F47E Ralph - Nessus7',
     '\U0001F47E Rael  - raelga',
