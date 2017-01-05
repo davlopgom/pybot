@@ -17,6 +17,7 @@ psnids = [
     '\U0001F47E DarkSieL - DarkSieL',
     '\U0001F47E Davs - SuPerDaVirL',
     '\U0001F47E Fo - Gahrall',
+    '\U0001F47E Fran - kuaterps',
     '\U0001F47E Frank - FJRISH',
     '\U0001F47E Javi - mezORZ',
     '\U0001F47E Jordi - Jc80__',
@@ -29,6 +30,7 @@ psnids = [
     '\U0001F47E Oscar - Heissentronik204',
     '\U0001F47E Ralph - Nessus7',
     '\U0001F47E Rael  - raelga',
+    '\U0001F47E Ruben - el_morty',
     '\U0001F47E Sergio - Reynoldor',
     '\U0001F47E Xou - xou86',
     '\U0001F47E Yeray - yeray201103']
