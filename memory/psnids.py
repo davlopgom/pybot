@@ -13,6 +13,7 @@ psnids = [
     'LVE - PSN ID List',
     '',
     '\U0001F47E Alucardd - alucardd79',
+    '\U0001F47E Alvaro - Alvaro1387',
     '\U0001F47E BoLoLsD - BoLoLsD',
     '\U0001F47E DarkSieL - DarkSieL',
     '\U0001F47E Davs - SuPerDaVirL',
