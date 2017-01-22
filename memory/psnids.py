@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 """
- psnids.py  Battlenet user list.
+ psnids.py      PSN user list.
  Author:        Rael Garcia <self@rael.io>
  Date:          0692016
  Tested on:     Python 3 / OS X 10.11.5
 """
 import re
 import sys
-import random
+	import random
 
 psnids = [
     'LVE - PSN ID List',
@@ -18,6 +18,7 @@ psnids = [
     '\U0001F47E Alvaro - Alvaro1387',
     '\U0001F47E BoLoLsD - BoLoLsD',
     '\U0001F47E DarkSieL - DarkSieL',
+    '\U0001F47E Dark Sefar - SefarII',
     '\U0001F47E Davs - SuPerDaVirL',
     '\U0001F47E Fo - Gahrall',
     '\U0001F47E Fran - kuaterps',
@@ -36,6 +37,7 @@ psnids = [
     '\U0001F47E Rovi  - RoVi_Wan',
     '\U0001F47E Ruben - el_morty',
     '\U0001F47E Sergio - Reynoldor',
+    '\U0001F47E Taphs - Taphs2',
     '\U0001F47E Xou - xou86',
     '\U0001F47E Yeray - yeray201103']
 
