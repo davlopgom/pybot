@@ -12,7 +12,7 @@ import random
 def hear(words):
 
     if re.search( r'(^|\s)rael(\s|$)', words, re.I|re.M):
-        return "@rael_ga"
+        return "@rael_pkts"
 
     if re.search( r'.*Are you ok?.*', words, re.I|re.M):
         return "I'm OK! I'm OK!!"
