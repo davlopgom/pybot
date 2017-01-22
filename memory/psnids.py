@@ -37,7 +37,7 @@ psnids = [
     '\U0001F47E Rovi  - RoVi_Wan',
     '\U0001F47E Ruben - el_morty',
     '\U0001F47E Sergio - Reynoldor',
-    '\U0001F47E Taphs - Taphs2',
+    '\U0001F47E Taphs - Taphs',
     '\U0001F47E Xou - xou86',
     '\U0001F47E Yeray - yeray201103']
 
