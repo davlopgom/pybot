@@ -132,7 +132,9 @@ def main():
     dp.add_handler(MessageHandler([Filters.status_update], event_response))
 
     # Command definitions
+    dp.add_handler(CommandHandler("update_yourself", update_yourself))
     dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("psnids", hear))
 
     # log all errors
     dp.add_error_handler(error)
