@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 """
- brain.py       Wrapper to allow dynamic plug-in architecture in bots.
+ battletags.py  Battlenet user list.
  Author:        Rael Garcia <self@rael.io>
- Date:          06/2016
- Usage:         Import the module to a bot.
+ Date:          0692016
  Tested on:     Python 3 / OS X 10.11.5
 """
 

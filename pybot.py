@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """
- pyboy.py       Telegram bot using python-telegram-bot.
+ battletags.py  Battlenet user list.
  Author:        Rael Garcia <self@rael.io>
- Date:          06/2016
- Usage:         Export TELEGRAM_TOKEN variable and run the bot.
+ Date:          0692016
  Tested on:     Python 3 / OS X 10.11.5
 """
+
 import re
 import random
 import os
@@ -17,19 +17,41 @@ from telegram import InlineQueryResultArticle, ForceReply, \
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, \
     MessageHandler, CallbackQueryHandler, Filters
 
+"""Function to log per day"""
+"""/start"""
+import time
 import logging
+import logging.handlers
+import win_unicode_console
 
-# Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+win_unicode_console.enable(use_unicode_argv=True)
+now = time.localtime(time.time())
+strdate = time.strftime("%d%m%y", now)
+log_file_name = './logs/pybot_'+strdate+'.log'
+logging_level = logging.INFO
 
-logger = logging.getLogger(__name__)
+try:
+    # set TimedRotatingFileHandler for root
+    formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s %(message)s')
+    # use very short interval for this example, typical 'when' would be 'midnight' and no explicit interval
+    handler = logging.handlers.TimedRotatingFileHandler(log_file_name, when="midnight")
+    handler.setFormatter(formatter)
+    logger = logging.getLogger() # or pass string to give it a name
+    logger.addHandler(handler)
+    logger.setLevel(logging_level)
 
-def start(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Hi!')
+except KeyboardInterrupt:
+    # handle Ctrl-C
+    logging.warn("Cancelled by user")
+except Exception as ex:
+    # handle unexpected script errors
+    logging.exception("Unhandled error\n{}".format(ex))
+    raise
+finally:
+    # perform an orderly shutdown by flushing and closing all handlers; called at application exit and no further use of the logging system should be made after this call.
+    logging.shutdown()
+"""/end"""
 
-def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Help!')
 
 from subprocess import check_output
 from importlib import reload
@@ -62,45 +84,21 @@ def hear(bot, update):
 
     m = update.message
 
-    #if ( m.chat_id == -1001056495683 ) and ( m.from_user.id == 53693428 ):
-    if ( m.from_user.id == 53693428 ):
-        if re.search( r'(^|\s)g[aA0-9]t.', m.text, re.I|re.M) \
-          or re.search( r'\\U0001F63[8-9A-F]', m.text, re.I|re.M) \
-          or re.search( r'(🐈|🐱|😺|😸|😹|😻|😼|😽|🙀|😿|😾)', m.text, re.I|re.M):
-            show(bot, update, "http://thecatapi.com/api/images/get?format=src&type=gif&timestamp=" + str(random.random()) + ".gif", 'url')
-
 import requests
 
 def speak(bot, update, thoughts):
     """Function to handle bot responses"""
     logger.info('I\'ve got something to say.')
     for words in thoughts:
+        r= re.search(r'\'file_id\': \'(.*?)\'.*', words)
         if os.path.isfile(words):
             show(bot, update, words, 'file')
         elif words.startswith('http'):
             show(bot, update, words, 'url')
+        elif r:
+            show(bot, update, r.group(1),'tarchive')
         else:
             bot.sendMessage(update.message.chat_id, text=words)
-
-def groups_hardcoded(bot, update):
-
-    rmk = InlineKeyboardMarkup([
-                    [InlineKeyboardButton('Destiny', url='https://telegram.me/pkts_destiny')],
-                    [InlineKeyboardButton('Overwatch', url='https://telegram.me/pkts_overwatch')],
-                    [InlineKeyboardButton('Battlefield', url='https://telegram.me/pkts_battlefield')],
-                    [InlineKeyboardButton('Final Fantasy', url='https://telegram.me/joinchat/AzNL9D_0xS_0h6Q3H5m69Q')],
-                    [InlineKeyboardButton('Grand Theft Auto', url='https://telegram.me/joinchat/AzNL9ECAaKh4y3za3egFbw')],
-                    [InlineKeyboardButton('Space Exploration', url='https://telegram.me/joinchat/AzNL9EAy0gzR3etQ_Q4JSw')],
-                    [InlineKeyboardButton('Division', url='https://telegram.me/joinchat/ANSWpD4TPEtu5wGU6O7J3Q')],
-                    [InlineKeyboardButton('Souls', url='https://telegram.me/joinchat/AzNL9ACpL0yP02kER67Mhg')],
-                    [InlineKeyboardButton('Borlderlands', url='https://telegram.me/joinchat/AzNL9AD3n5pKH_6e1trOZA')],
-                    [InlineKeyboardButton('Hearthstone', url='https://telegram.me/joinchat/AzNL9D7UHCsWDtfgz1cw3g')],
-                    [InlineKeyboardButton('PC Master Race', url='https://telegram.me/joinchat/AzNL9EFBO0e81gXlECiRzA')],
-                    [InlineKeyboardButton('Pokémon', url='https://telegram.me/joinchat/AzNL9D-KxgBdpa9RlWF2kg')],
-                    [InlineKeyboardButton('Miscelánea', url='https://telegram.me/miscelanea')],
-                   ])
-
-    bot.sendMessage(update.message.chat_id, text="Listado de grupos, pulsa para unirte.", reply_markup=rmk)
 
 
 def show(bot, update, stuff, type):
@@ -137,14 +135,20 @@ def event_response(bot, update):
     """Function to handle text messages"""
     if update.message.new_chat_member is not None:
         logger.info('New member')
-        thoughts = brain.respond(update.message.text, 'salute')
+        thoughts = brain.respond(update.message.text, 'member_join')
 
     if update.message.left_chat_member is not None:
         logger.info('Member left')
-        thoughts = brain.respond(update.message.text, 'farewell')
+        thoughts = brain.respond(update.message.text, 'member_left')
 
     remember(bot, update)
     if thoughts is not None: speak(bot, update, thoughts)
+
+def docid(bot, update):
+    """Function to get the document id stored on bot"""
+    m = update
+    r= re.search(r'\'file_id\': \'(.*?)\',', str(m))
+    bot.sendMessage(update.message.chat_id, text=r.group(1))
 
 def dynmenu(bot, update):
     """Function to print a dynamic menu"""
@@ -244,6 +248,8 @@ def main():
     dp.add_handler(CommandHandler("update_yourself", update_yourself))
     dp.add_handler(CommandHandler('menu', dynmenu))
     dp.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(MessageHandler([Filters.document], docid))
+    dp.add_handler(MessageHandler([Filters.sticker], docid)
 
     # log all errors
     dp.add_error_handler(error)
